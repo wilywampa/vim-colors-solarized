@@ -134,27 +134,7 @@
 " Allow or disallow certain features based on current terminal emulator or 
 " environment.
 
-" Terminals that support italics
-let s:terms_italic=[
-            \"rxvt",
-            \"gnome-terminal"
-            \]
-" For reference only, terminals are known to be incomptible.
-" Terminals that are in neither list need to be tested.
-let s:terms_noitalic=[
-            \"iTerm.app",
-            \"Apple_Terminal"
-            \]
-if has("gui_running")
-    let s:terminal_italic=1 " TODO: could refactor to not require this at all
-else
-    let s:terminal_italic=0 " terminals will be guilty until proven compatible
-    for term in s:terms_italic
-        if $TERM_PROGRAM =~ term
-            let s:terminal_italic=1
-        endif
-    endfor
-endif
+let s:terminal_italic=0
 
 " }}}
 " Default option values"{{{
@@ -218,9 +198,9 @@ call s:SetOption("italic",1) " note that we need to override this later if the t
 call s:SetOption("termcolors",16)
 call s:SetOption("contrast","normal")
 call s:SetOption("visibility","normal")
-call s:SetOption("diffmode","normal")
+call s:SetOption("diffmode","high")
 call s:SetOption("hitrail",0)
-call s:SetOption("menu",1)
+call s:SetOption("menu",0)
 
 "}}}
 " Colorscheme initialization "{{{
@@ -619,6 +599,7 @@ exe "hi! Search"         .s:fmt_revr   .s:fg_yellow .s:bg_none
 exe "hi! MoreMsg"        .s:fmt_none   .s:fg_blue   .s:bg_none
 exe "hi! ModeMsg"        .s:fmt_none   .s:fg_blue   .s:bg_none
 exe "hi! LineNr"         .s:fmt_none   .s:fg_base01 .s:bg_base02
+exe "hi! CursorLineNr"   .s:fmt_bold   .s:fg_base0  .s:bg_base02
 exe "hi! Question"       .s:fmt_bold   .s:fg_cyan   .s:bg_none
 if ( has("gui_running") || &t_Co > 8 )
     exe "hi! VertSplit"  .s:fmt_none   .s:fg_base00 .s:bg_base00
@@ -629,11 +610,11 @@ exe "hi! Title"          .s:fmt_bold   .s:fg_orange .s:bg_none
 exe "hi! VisualNOS"      .s:fmt_stnd   .s:fg_none   .s:bg_base02 .s:fmt_revbb
 exe "hi! WarningMsg"     .s:fmt_bold   .s:fg_red    .s:bg_none
 exe "hi! WildMenu"       .s:fmt_none   .s:fg_base2  .s:bg_base02 .s:fmt_revbb
-exe "hi! Folded"         .s:fmt_undb   .s:fg_base0  .s:bg_base02  .s:sp_base03
+exe "hi! Folded"         .s:fmt_none   .s:fg_base0  .s:bg_base02  .s:sp_base03
 exe "hi! FoldColumn"     .s:fmt_none   .s:fg_base0  .s:bg_base02
 if      (g:solarized_diffmode=="high")
 exe "hi! DiffAdd"        .s:fmt_revr   .s:fg_green  .s:bg_none
-exe "hi! DiffChange"     .s:fmt_revr   .s:fg_yellow .s:bg_none
+exe "hi! DiffChange"     .s:fmt_revr   .s:fg_orange .s:bg_none
 exe "hi! DiffDelete"     .s:fmt_revr   .s:fg_red    .s:bg_none
 exe "hi! DiffText"       .s:fmt_revr   .s:fg_blue   .s:bg_none
 elseif  (g:solarized_diffmode=="low")
@@ -656,7 +637,11 @@ exe "hi! DiffText"       .s:fmt_none   .s:fg_blue   .s:bg_base02 .s:sp_blue
 endif
 exe "hi! SignColumn"     .s:fmt_none   .s:fg_base0
 exe "hi! Conceal"        .s:fmt_none   .s:fg_blue   .s:bg_none
-exe "hi! SpellBad"       .s:fmt_curl   .s:fg_none   .s:bg_none    .s:sp_red
+if has("gui_running")
+  exe "hi! SpellBad"     .s:fmt_curl   .s:fg_none   .s:bg_none    .s:sp_red
+else
+  exe "hi! SpellBad"     .s:fmt_undr   .s:fg_red    .s:bg_none    .s:sp_red
+endif
 exe "hi! SpellCap"       .s:fmt_curl   .s:fg_none   .s:bg_none    .s:sp_violet
 exe "hi! SpellRare"      .s:fmt_curl   .s:fg_none   .s:bg_none    .s:sp_cyan
 exe "hi! SpellLocal"     .s:fmt_curl   .s:fg_none   .s:bg_none    .s:sp_yellow
@@ -987,7 +972,10 @@ hi! link pandocMetadataTitle             pandocMetadata
 " mode (detected with the script scope s:vmode variable). It also allows for 
 " other potential terminal customizations that might make gui mode suboptimal.
 "
-autocmd GUIEnter * if (s:vmode != "gui") | exe "colorscheme " . g:colors_name | endif
+augroup Solarized
+  autocmd!
+  autocmd GUIEnter * if (s:vmode != "gui") | exe "colorscheme " . g:colors_name | endif
+augroup END
 "}}}
 " Highlight Trailing Space {{{
 " Experimental: Different highlight when on cursorline
@@ -1115,3 +1103,6 @@ autocmd ColorScheme * if g:colors_name != "solarized" | silent! aunmenu Solarize
 "
 " vim:foldmethod=marker:foldlevel=0
 "}}}
+
+hi link IndentGuidesOdd Normal
+hi link IndentGuidesEven CursorLine
