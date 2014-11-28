@@ -1106,3 +1106,30 @@ augroup END
 
 hi link IndentGuidesOdd Normal
 hi link IndentGuidesEven CursorLine
+
+if !exists('*<SID>ToggleSolarized256')
+  func! s:ToggleSolarized256()
+    if exists('g:solarized_termcolors') && g:solarized_termcolors == 256
+      unlet g:solarized_termcolors
+      colorscheme solarized
+      silent! let &background = s:bg
+    else
+      let s:bg = &background
+      let g:solarized_termcolors = 256
+      colorscheme solarized
+    endif
+  endfunc
+endif
+nnoremap <silent> ,ss :call <SID>ToggleSolarized256()<CR>
+
+if !exists('*<SID>ToggleDiffVisibility()')
+  function! s:ToggleDiffVisibility()
+    if g:solarized_diffmode == "high"
+      let g:solarized_diffmode = "normal"
+    else
+      let g:solarized_diffmode = "high"
+    endif
+    colorscheme solarized
+  endfunction
+endif
+nnoremap <silent> coy :<C-u>call <SID>ToggleDiffVisibility()<CR>
