@@ -589,8 +589,10 @@ else
     exe "hi! SpecialKey" .s:fmt_bold   .s:fg_base00 .s:bg_base02
     exe "hi! NonText"    .s:fmt_bold   .s:fg_base00 .s:bg_none
 endif
-exe "hi! StatusLine"     .s:fmt_none   .s:fg_base1  .s:bg_base02 .s:fmt_revbb
+exe "hi! StatusLine"     .s:fmt_none   .s:fg_base1  .s:bg_base02
 exe "hi! StatusLineNC"   .s:fmt_none   .s:fg_base00 .s:bg_base02 .s:fmt_revbb
+exe "hi! StatusFlag"     .s:fmt_none   .s:fg_red    .s:bg_base02
+exe "hi! StatusModified" .s:fmt_none   .s:fg_yellow .s:bg_base02
 exe "hi! Visual"         .s:fmt_none   .s:fg_base01 .s:bg_base03 .s:fmt_revbb
 exe "hi! Directory"      .s:fmt_none   .s:fg_blue   .s:bg_none
 exe "hi! ErrorMsg"       .s:fmt_revr   .s:fg_red    .s:bg_none
@@ -1107,6 +1109,12 @@ augroup END
 hi link IndentGuidesOdd Normal
 hi link IndentGuidesEven CursorLine
 
+if exists('g:lightline')
+  let g:lightline.colorscheme = &background ==# 'light' ?
+      \ 'solarized_light' : 'solarized_dark'
+  silent! call lightline#init()
+endif
+
 if !exists('*<SID>ToggleSolarized256')
   func! s:ToggleSolarized256()
     if exists('g:solarized_termcolors') && g:solarized_termcolors == 256
@@ -1117,6 +1125,12 @@ if !exists('*<SID>ToggleSolarized256')
       let s:bg = &background
       let g:solarized_termcolors = 256
       colorscheme solarized
+    endif
+    if exists('*lightline#init') && has_key(get(g:, 'lightline', {}), 'colorscheme')
+      runtime! autoload/lightline/colorscheme/solarized_dark.vim
+      runtime! autoload/lightline/colorscheme/solarized_light.vim
+      call lightline#init()
+      call lightline#update()
     endif
   endfunc
 endif
