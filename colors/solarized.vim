@@ -134,6 +134,8 @@
 " Allow or disallow certain features based on current terminal emulator or 
 " environment.
 
+let background_save = &background
+
 let s:terminal_italic=0
 
 " }}}
@@ -1106,26 +1108,25 @@ augroup END
 " vim:foldmethod=marker:foldlevel=0
 "}}}
 
+let &background = background_save
+
 hi link IndentGuidesOdd Normal
 hi link IndentGuidesEven CursorLine
 
 if exists('g:lightline')
-  let g:lightline.colorscheme = &background ==# 'light' ?
-      \ 'solarized_light' : 'solarized_dark'
+  let g:lightline.colorscheme = 'solarized_' . &background
   silent! call lightline#init()
+  " silent! call lightline#update()
 endif
 
 if !exists('*<SID>ToggleSolarized256')
   func! s:ToggleSolarized256()
     if exists('g:solarized_termcolors') && g:solarized_termcolors == 256
       unlet g:solarized_termcolors
-      colorscheme solarized
-      silent! let &background = s:bg
     else
-      let s:bg = &background
       let g:solarized_termcolors = 256
-      colorscheme solarized
     endif
+    colorscheme solarized
     if exists('*lightline#init') && has_key(get(g:, 'lightline', {}), 'colorscheme')
       runtime! autoload/lightline/colorscheme/solarized_dark.vim
       runtime! autoload/lightline/colorscheme/solarized_light.vim
