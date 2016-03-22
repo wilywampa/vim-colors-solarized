@@ -1114,9 +1114,9 @@ hi link IndentGuidesOdd Normal
 hi link IndentGuidesEven CursorLine
 
 if exists('g:lightline')
-  let g:lightline.colorscheme = 'solarized_' . &background
+  runtime! autoload/lightline/colorscheme/solarized_custom.vim
+  let g:lightline.colorscheme = 'solarized_custom'
   silent! call lightline#init()
-  " silent! call lightline#update()
 endif
 
 if !exists('*<SID>ToggleSolarized256')
@@ -1128,8 +1128,7 @@ if !exists('*<SID>ToggleSolarized256')
     endif
     colorscheme solarized
     if exists('*lightline#init') && has_key(get(g:, 'lightline', {}), 'colorscheme')
-      runtime! autoload/lightline/colorscheme/solarized_dark.vim
-      runtime! autoload/lightline/colorscheme/solarized_light.vim
+      runtime! autoload/lightline/colorscheme/solarized_custom.vim
       call lightline#init()
       call lightline#update()
     endif
