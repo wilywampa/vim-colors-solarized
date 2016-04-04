@@ -12,7 +12,7 @@ let s:cuicolors = {
     \ 'base0':  [ '12', '244', 'LightBlue' ],
     \ 'base1':  [ '14', '245', 'LightCyan' ],
     \ 'base2': [ '7', '187', 'LightGray' ],
-    \ 'base3': [ '15', '230', 'White' ],
+    \ 'base3': [ '15', '253', 'White' ],
     \ 'yellow': [ '3', '136', 'DarkYellow' ],
     \ 'orange': [ '9', '166', 'LightRed' ],
     \ 'red': [ '160', '160', 'DarkRed' ],
