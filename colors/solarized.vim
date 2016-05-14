@@ -222,7 +222,7 @@ let colors_name = "solarized"
 " leave the hex values out entirely in that case and include only cterm colors)
 " We also check to see if user has set solarized (force use of the
 " neutral gray monotone palette component)
-let s:gui_running = has("gui_running") || (exists('&guicolors') && &guicolors)
+let s:gui_running = has("gui_running") || (exists('&termguicolors') && &termguicolors)
 if (s:gui_running && g:solarized_degrade == 0)
     let s:vmode       = "gui"
     let s:base03      = "#002b36"
@@ -455,23 +455,24 @@ exe "let s:fg_violet    = ' ".s:vmode."fg=".s:violet ."'"
 exe "let s:fg_blue      = ' ".s:vmode."fg=".s:blue   ."'"
 exe "let s:fg_cyan      = ' ".s:vmode."fg=".s:cyan   ."'"
 
-exe "let s:fmt_none     = ' ".s:vmode."=NONE".          " term=NONE".    "'"
-exe "let s:fmt_bold     = ' ".s:vmode."=NONE".s:b.      " term=NONE".s:b."'"
-exe "let s:fmt_bldi     = ' ".s:vmode."=NONE".s:b.      " term=NONE".s:b."'"
-exe "let s:fmt_undr     = ' ".s:vmode."=NONE".s:u.      " term=NONE".s:u."'"
-exe "let s:fmt_undb     = ' ".s:vmode."=NONE".s:u.s:b.  " term=NONE".s:u.s:b."'"
-exe "let s:fmt_undi     = ' ".s:vmode."=NONE".s:u.      " term=NONE".s:u."'"
-exe "let s:fmt_uopt     = ' ".s:vmode."=NONE".s:ou.     " term=NONE".s:ou."'"
-exe "let s:fmt_curl     = ' ".s:vmode."=NONE".s:c.      " term=NONE".s:c."'"
-exe "let s:fmt_ital     = ' ".s:vmode."=NONE".s:i.      " term=NONE".s:i."'"
-exe "let s:fmt_stnd     = ' ".s:vmode."=NONE".s:s.      " term=NONE".s:s."'"
-exe "let s:fmt_revr     = ' ".s:vmode."=NONE".s:r.      " term=NONE".s:r."'"
-exe "let s:fmt_revb     = ' ".s:vmode."=NONE".s:r.s:b.  " term=NONE".s:r.s:b."'"
+let s:fmt_vmode = has("gui_running") ? "gui" : "cterm"
+exe "let s:fmt_none     = ' ".s:fmt_vmode."=NONE".          " term=NONE".    "'"
+exe "let s:fmt_bold     = ' ".s:fmt_vmode."=NONE".s:b.      " term=NONE".s:b."'"
+exe "let s:fmt_bldi     = ' ".s:fmt_vmode."=NONE".s:b.      " term=NONE".s:b."'"
+exe "let s:fmt_undr     = ' ".s:fmt_vmode."=NONE".s:u.      " term=NONE".s:u."'"
+exe "let s:fmt_undb     = ' ".s:fmt_vmode."=NONE".s:u.s:b.  " term=NONE".s:u.s:b."'"
+exe "let s:fmt_undi     = ' ".s:fmt_vmode."=NONE".s:u.      " term=NONE".s:u."'"
+exe "let s:fmt_uopt     = ' ".s:fmt_vmode."=NONE".s:ou.     " term=NONE".s:ou."'"
+exe "let s:fmt_curl     = ' ".s:fmt_vmode."=NONE".s:c.      " term=NONE".s:c."'"
+exe "let s:fmt_ital     = ' ".s:fmt_vmode."=NONE".s:i.      " term=NONE".s:i."'"
+exe "let s:fmt_stnd     = ' ".s:fmt_vmode."=NONE".s:s.      " term=NONE".s:s."'"
+exe "let s:fmt_revr     = ' ".s:fmt_vmode."=NONE".s:r.      " term=NONE".s:r."'"
+exe "let s:fmt_revb     = ' ".s:fmt_vmode."=NONE".s:r.s:b.  " term=NONE".s:r.s:b."'"
 " revbb (reverse bold for bright colors) is only set to actual bold in low 
 " color terminals (t_co=8, such as OS X Terminal.app) and should only be used 
 " with colors 8-15.
-exe "let s:fmt_revbb    = ' ".s:vmode."=NONE".s:r.s:bb.   " term=NONE".s:r.s:bb."'"
-exe "let s:fmt_revbbu   = ' ".s:vmode."=NONE".s:r.s:bb.s:u." term=NONE".s:r.s:bb.s:u."'"
+exe "let s:fmt_revbb    = ' ".s:fmt_vmode."=NONE".s:r.s:bb.   " term=NONE".s:r.s:bb."'"
+exe "let s:fmt_revbbu   = ' ".s:fmt_vmode."=NONE".s:r.s:bb.s:u." term=NONE".s:r.s:bb.s:u."'"
 
 if s:gui_running
     exe "let s:sp_none      = ' guisp=".s:none   ."'"
@@ -1124,8 +1125,17 @@ if !exists('*<SID>ToggleSolarized256')
   func! s:ToggleSolarized256()
     if exists('g:solarized_termcolors') && g:solarized_termcolors == 256
       unlet g:solarized_termcolors
+      if exists('s:restore_tgc') && s:restore_tgc
+        set termguicolors
+      endif
     else
       let g:solarized_termcolors = 256
+      if exists('&termguicolors') && &termguicolors
+        set notermguicolors
+        let s:restore_tgc = 1
+      else
+        let s:restore_tgc = 0
+      endif
     endif
     colorscheme solarized
     if exists('*lightline#init') && has_key(get(g:, 'lightline', {}), 'colorscheme')
