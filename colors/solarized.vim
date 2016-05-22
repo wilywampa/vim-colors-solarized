@@ -136,8 +136,6 @@
 
 let background_save = &background
 
-let s:terminal_italic=0
-
 " }}}
 " Default option values"{{{
 " ---------------------------------------------------------------------
@@ -196,7 +194,7 @@ call s:SetOption("termtrans",s:solarized_termtrans_default)
 call s:SetOption("degrade",0)
 call s:SetOption("bold",1)
 call s:SetOption("underline",1)
-call s:SetOption("italic",1) " note that we need to override this later if the terminal doesn't support
+call s:SetOption("italic",0)
 call s:SetOption("termcolors",16)
 call s:SetOption("contrast","normal")
 call s:SetOption("visibility","normal")
@@ -407,10 +405,10 @@ else
     let s:u           = ",underline"
 endif
 
-if g:solarized_italic == 0 || s:terminal_italic == 0
-    let s:i           = ""
-else
+if g:solarized_italic
     let s:i           = ",italic"
+else
+    let s:i           = ""
 endif
 "}}}
 " Highlighting primitives"{{{
@@ -1087,6 +1085,8 @@ let &background = background_save
 
 hi link IndentGuidesOdd Normal
 hi link IndentGuidesEven CursorLine
+hi link rstEmphasis pandocEmphasis
+hi link htmlItalic pandocEmphasis
 
 if exists('g:lightline')
   runtime! autoload/lightline/colorscheme/solarized_custom.vim
