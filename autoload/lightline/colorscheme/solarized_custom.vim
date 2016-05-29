@@ -43,6 +43,7 @@ let s:base0 = [ '#839496', s:cuicolors.base0[s:cuiindex] ]
 let s:base1 = [ '#93a1a1', s:cuicolors.base1[s:cuiindex] ]
 let s:base2 = [ '#eee8d5', s:cuicolors.base2[s:cuiindex] ]
 let s:base3 = [ '#fdf6e3', s:cuicolors.base3[s:cuiindex] ]
+let s:white = s:base3
 let s:yellow = [ '#b58900', s:cuicolors.yellow[s:cuiindex] ]
 let s:orange = [ '#cb4b16', s:cuicolors.orange[s:cuiindex] ]
 let s:red = [ '#dc322f', s:cuicolors.red[s:cuiindex] ]
@@ -60,12 +61,12 @@ if &background ==# 'light'
 endif
 
 let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
-let s:p.normal.left = [ [ s:base3, s:blue, 'bold' ], [ s:base3, s:base01 ] ]
+let s:p.normal.left = [ [ s:white, s:blue, 'bold' ], [ s:white, s:base01 ] ]
 let s:p.inactive.right = [ [ s:base02, s:base01 ], [ s:base00, s:base02 ] ]
 let s:p.inactive.left =  [ [ s:base00, s:base02 ], [ s:base00, s:base02 ] ]
-let s:p.insert.left = [ [ s:base3, s:yellow, 'bold' ], [ s:base3, s:base01 ] ]
-let s:p.replace.left = [ [ s:base3, s:magenta, 'bold' ], [ s:base3, s:base01 ] ]
-let s:p.visual.left = [ [ s:base3, s:red, 'bold' ], [ s:base3, s:base01 ] ]
+let s:p.insert.left = [ [ s:white, s:yellow, 'bold' ], [ s:white, s:base01 ] ]
+let s:p.replace.left = [ [ s:white, s:magenta, 'bold' ], [ s:white, s:base01 ] ]
+let s:p.visual.left = [ [ s:white, s:red, 'bold' ], [ s:white, s:base01 ] ]
 let s:p.normal.middle = [ [ s:base1, s:base02 ] ]
 let s:p.inactive.middle = [ [ s:base0, s:base02 ] ]
 if &background ==# 'light'
