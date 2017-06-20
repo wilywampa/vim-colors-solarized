@@ -452,7 +452,7 @@ exe "let s:fg_violet    = ' ".s:vmode."fg=".s:violet ."'"
 exe "let s:fg_blue      = ' ".s:vmode."fg=".s:blue   ."'"
 exe "let s:fg_cyan      = ' ".s:vmode."fg=".s:cyan   ."'"
 
-let s:fmt_vmode = has("gui_running") ? "gui" : "cterm"
+let s:fmt_vmode = (has("gui_running") || (has('nvim') && &termguicolors)) ? "gui" : "cterm"
 exe "let s:fmt_none     = ' ".s:fmt_vmode."=NONE".          " term=NONE".    "'"
 exe "let s:fmt_bold     = ' ".s:fmt_vmode."=NONE".s:b.      " term=NONE".s:b."'"
 exe "let s:fmt_bldi     = ' ".s:fmt_vmode."=NONE".s:b.      " term=NONE".s:b."'"
